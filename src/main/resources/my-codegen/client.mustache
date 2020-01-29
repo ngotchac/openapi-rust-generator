@@ -1,0 +1,52 @@
+use std::rc::Rc;
+
+use super::configuration::Configuration;
+
+pub struct APIClient {
+{{#apiInfo}}
+{{#apis}}
+{{#operations}}
+{{#operation}}
+    {{#-last}}
+    {{{classFilename}}}: crate::apis::{{{classname}}}Client,
+    {{/-last}}
+{{/operation}}
+{{/operations}}
+{{/apis}}
+{{/apiInfo}}
+}
+
+impl APIClient {
+    pub fn new(configuration: Configuration) -> APIClient {
+        let rc = Rc::new(configuration);
+
+        APIClient {
+{{#apiInfo}}
+{{#apis}}
+{{#operations}}
+{{#operation}}
+            {{#-last}}
+            {{{classFilename}}}: crate::apis::{{{classname}}}Client::new(rc.clone()),
+            {{/-last}}
+{{/operation}}
+{{/operations}}
+{{/apis}}
+{{/apiInfo}}
+        }
+    }
+
+{{#apiInfo}}
+{{#apis}}
+{{#operations}}
+{{#operation}}
+{{#-last}}
+    pub fn {{{classFilename}}}(&self) -> &crate::apis::{{{classname}}}Client {
+        &self.{{{classFilename}}}
+    }
+
+{{/-last}}
+{{/operation}}
+{{/operations}}
+{{/apis}}
+{{/apiInfo}}
+}
